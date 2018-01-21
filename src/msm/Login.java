@@ -30,7 +30,6 @@ import javax.swing.JPasswordField;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
-import java.awt.Toolkit;
 import javax.swing.JCheckBox;
 
 public class Login extends JFrame {
@@ -49,8 +48,6 @@ public class Login extends JFrame {
 	String typedPassword;
 	String userName = preferences.get("user", "");
 	String passes = preferences.get("pass", "");
-	// System.out.println(userName.toString());
-	// System.out.println(passes.toString());
 
 	/**
 	 * Launch the application.
@@ -70,7 +67,7 @@ public class Login extends JFrame {
 
 	public class DoLogin extends SwingWorker {
 		public void done() {
-			// On successfull login save user data
+			
 			preferences.put("user", username.getText().toString());
 			preferences.put("pass", typedPassword.toString());
 		}
@@ -84,7 +81,6 @@ public class Login extends JFrame {
 
 	public class DoDelete extends SwingWorker {
 		public void done() {
-			// On successfull login save user data
 			preferences.remove("user");
 			preferences.remove("pass");
 		}
@@ -108,8 +104,6 @@ public class Login extends JFrame {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		//System.out.println("Opened database successfully");
-		//login();
 		try {
 			URL path = getClass().getResource("medical.png");
 			File file = new File(path.toURI());
@@ -124,8 +118,15 @@ public class Login extends JFrame {
 		}
 		setResizable(false);
 		setTitle("Login form");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(400, 200, 450, 300);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		    	preferences.remove("user");
+		    	System.exit(0);
+		    }
+		});
+		setBounds(400, 200, 453, 362);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -134,7 +135,7 @@ public class Login extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Sign in", TitledBorder.LEADING,
 				TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel.setBounds(44, 42, 349, 196);
+		panel.setBounds(44, 42, 349, 197);
 		contentPane.add(panel);
 		panel.setLayout(null);
 
@@ -153,7 +154,6 @@ public class Login extends JFrame {
 
 		JButton button = new JButton("Login");
 		button.setIcon(new ImageIcon(getClass().getResource("check.png")));
-		// button.setVerticalTextPosition(AbstractButton.CENTER);
 		button.setHorizontalTextPosition(AbstractButton.RIGHT);
 		contentPane.getRootPane().setDefaultButton(button);
 		button.requestFocus();
@@ -165,13 +165,15 @@ public class Login extends JFrame {
 
 				if (!username.getText().equals("") && !typedPassword.equals("")) {
 
-					String sql = "SELECT username, password FROM users where username=? and password=?";
+					String sql = "SELECT id, username, password, admin FROM users where username=? and password=?";
 					try {
 						PreparedStatement statement = connection.prepareStatement(sql);
 						statement.setString(1, username.getText().toString());
 						statement.setString(2, typedPassword);
 
 						ResultSet set = statement.executeQuery();
+						String admin = set.getString("admin");
+						preferences.put("user_id", set.getString("id"));
 
 						int count = 0;
 						while (set.next()) {
@@ -180,6 +182,7 @@ public class Login extends JFrame {
 
 						if (count == 1) {
 							JOptionPane.showMessageDialog(button, "Login success");
+							
 							if (chckbxRememberMe.isSelected()) {
 								DoLogin log = new DoLogin();
 								log.execute();
@@ -187,10 +190,18 @@ public class Login extends JFrame {
 								DoDelete delete = new DoDelete();
 								delete.execute();
 							}
-							Login.this.hide();
-							Main frMain = new Main();
-							frMain.setVisible(true);
-							frMain.show();
+							if(admin.equals("1")){
+								Login.this.hide();
+								Admin frMain = new Admin();
+								frMain.setVisible(true);
+								frMain.show();
+							}
+							else {
+								Login.this.hide();
+								Customer frMain = new Customer();
+								frMain.setVisible(true);
+								frMain.show();
+							}
 
 						} else if (count > 1) {
 							System.out.println("Duplicate");
@@ -231,45 +242,6 @@ public class Login extends JFrame {
 		if (!userName.equals("") && !passes.equals("")) {
 			username.setText(userName.toString());
 			password.setText(passes.toString());
-		}
-	}
-
-	public void login() {
-		if (!userName.equals("") && !passes.equals("")) {
-
-			String sql = "SELECT username, password FROM users where username=? and password=?";
-			try {
-				PreparedStatement statement = connection.prepareStatement(sql);
-				statement.setString(1, userName);
-				statement.setString(2, passes);
-
-				ResultSet set = statement.executeQuery();
-
-				int count = 0;
-				while (set.next()) {
-					count++;
-				}
-
-				if (count == 1) {
-					// JOptionPane.showMessageDialog(button, "Login success");
-					Login.this.setVisible(false);
-					Main frMain = new Main();
-					frMain.setVisible(true);
-					frMain.show();
-					Login.this.dispose();
-					Login.this.setVisible(false);
-					contentPane.removeAll();
-
-				} else if (count > 1) {
-					System.out.println("Duplicate");
-				} else {
-					System.out.println("Not Exists");
-				}
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-		} else {
-			// JOptionPane.showMessageDialog(panel, "Fields can not be empty");
 		}
 	}
 }

@@ -42,25 +42,6 @@ public class Update_medicine extends JFrame {
 	private JLabel lblProductPrice;
 	String oldName;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Update_medicine frame = new Update_medicine();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
-	 * Create the frame.
-	 */
 	public Update_medicine() {
 		setResizable(false);
 		try {

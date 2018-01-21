@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.border.EmptyBorder;
@@ -16,9 +15,6 @@ import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-
-import msm.Medicin.Popup;
-import net.proteanit.sql.DbUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -40,7 +36,6 @@ import java.net.URL;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.EventQueue;
 
 public class Company extends JFrame {
 
@@ -54,23 +49,14 @@ public class Company extends JFrame {
 	DefaultTableModel model;
 	int n;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Company frame = new Company();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
+	
 	class Popup extends JPopupMenu {
+		/**
+		 * 
+		 */
+		
+		private static final long serialVersionUID = 1L;
+
 		public Popup(JTable table) {
 			JMenuItem edit = new JMenuItem("Edit");
 			JMenuItem delete = new JMenuItem("Delete");
@@ -104,12 +90,7 @@ public class Company extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					n = table.getRowCount();
 					int index = table.getSelectedRow();
-					// JOptionPane.showMessageDialog(edit, index + " CLicked");
-					// TableModel model = table.getModel();
 					String id = (String) model.getValueAt(index, 0);
-					// String address = (String)model.getValueAt(index, 1);
-					// String phone = (String)model.getValueAt(index, 2);
-					// JOptionPane.showMessageDialog(delete, id);
 
 					String sql = "DELETE from company where id = ?";
 					try {
@@ -220,9 +201,6 @@ public class Company extends JFrame {
 				Component c = super.prepareRenderer(renderer, row, column);
 				JComponent jc = (JComponent) c;
 
-				// Color row based on a cell value
-				// Alternate row color
-
 				if (!isRowSelected(row)) {
 					c.setBackground(row % 2 == 0 ? getBackground() : Color.DARK_GRAY);
 					jc.setBorder(new MatteBorder(1, 0, 1, 0, Color.BLUE));
@@ -238,8 +216,6 @@ public class Company extends JFrame {
 		};
 		scrollPane.setViewportView(table);
 		table.setBackground(Color.LIGHT_GRAY);
-		// MatteBorder border = new MatteBorder(2, 1, 1, 1, Color.RED);
-		// table.setBorder(border);
 		table.setForeground(Color.WHITE);
 		table.setFont(table.getFont().deriveFont(18.0f));
 		table.setRowHeight(40);

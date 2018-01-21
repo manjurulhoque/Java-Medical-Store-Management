@@ -55,18 +55,7 @@ public class Update_company extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Update_company frame = new Update_company();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+
 
 	class Popup extends JPopupMenu {
 		/**
@@ -104,10 +93,6 @@ public class Update_company extends JFrame {
 					// JOptionPane.showMessageDialog(edit, index + " CLicked");
 					TableModel model = table.getModel();
 					String name = (String) model.getValueAt(index, 0);
-					// String address = (String)model.getValueAt(index, 1);
-					// String phone = (String)model.getValueAt(index, 2);
-					// JOptionPane.showMessageDialog(delete, name + " " +
-					// address + " " + phone);
 
 					int id = Integer.parseInt(name);
 

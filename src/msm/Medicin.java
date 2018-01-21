@@ -48,22 +48,6 @@ public class Medicin extends JFrame {
 	DefaultTableModel model;
 	Connection connection = null;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Medicin frame = new Medicin();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
 	class Popup extends JPopupMenu {
 		public Popup(JTable table) {
 			JMenuItem edit = new JMenuItem("Edit");
@@ -201,7 +185,7 @@ public class Medicin extends JFrame {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Medicin.this.hide();
-				new Main().show();
+				new Admin().show();
 			}
 		});
 		btnBack.setForeground(Color.WHITE);

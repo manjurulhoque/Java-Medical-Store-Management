@@ -55,22 +55,6 @@ public class Sale_record extends JFrame {
 	private JTextField textField;
 	int index ;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Sale_record frame = new Sale_record();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-	
 	class Popup extends JPopupMenu {
 		/**
 		 * 
@@ -85,16 +69,12 @@ public class Sale_record extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					index = table.getSelectedRow();
-					//JOptionPane.showMessageDialog(edit, index + " CLicked");
 					TableModel model = table.getModel();
 					String name = (String)model.getValueAt(index, 0);
-					//String address = (String)model.getValueAt(index, 1);
-					//String phone = (String)model.getValueAt(index, 2);
-					//JOptionPane.showMessageDialog(delete, name);
 					
 					int id = Integer.parseInt(name);
 					
-					String sql = "DELETE from sale where id = ?";
+					String sql = "DELETE from cart where id = ?";
 					try {
 						PreparedStatement statement = connection.prepareStatement(sql);
 						statement.setInt(1, id);
@@ -162,8 +142,11 @@ public class Sale_record extends JFrame {
 		
 		table = new JTable();
 		table = new JTable(model) {
-			// Returning the Class of each column will allow different
-			// renderers to be used based on Class
+			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
 			public Class getColumnClass(int column) {
 				return getValueAt(0, column).getClass();
@@ -172,10 +155,7 @@ public class Sale_record extends JFrame {
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
 				JComponent jc = (JComponent) c;
-
-				// Color row based on a cell value
-				// Alternate row color
-
+			
 				if (!isRowSelected(row)) {
 					c.setBackground(row % 2 == 0 ? getBackground() : Color.DARK_GRAY);
 					jc.setBorder(new MatteBorder(1, 0, 1, 0, Color.BLUE));
@@ -183,8 +163,6 @@ public class Sale_record extends JFrame {
 					c.setBackground(row % 2 == 0 ? getBackground() : Color.DARK_GRAY);
 					jc.setBorder(new MatteBorder(1, 0, 1, 0, Color.RED));
 				}
-
-				// Use bold font on selected row
 
 				return c;
 			}
@@ -195,7 +173,7 @@ public class Sale_record extends JFrame {
 		table.setFont(table.getFont().deriveFont(18.0f));
 		table.setRowHeight(40);
 		
-		Object[] columns = {"Sales Id", "Prodcut Name", "Company name", "Date of sale", "Quantity", "Price per unit"};
+		Object[] columns = {"Sales Id", "Prodcut Name", "User id", "Total"};
 		model = new DefaultTableModel();
 		model.setColumnIdentifiers(columns);
 		table.setModel(model);
@@ -229,25 +207,20 @@ public class Sale_record extends JFrame {
 	
 	public void load()
 	{
-		String sql = "select * from sale";
-		Object[] row = new Object[6];
+		String sql = "select * from cart";
+		Object[] row = new Object[4];
 		try {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			ResultSet set = statement.executeQuery();
-			//table.setModel(DbUtils.resultSetToTableModel(set));
 			while(set.next())
 			{
 				row[0] = set.getString("id");
 				row[1] = set.getString("product_name");
-				row[2] = set.getString("company_name");
-				row[3] = set.getString("date");
-				row[4] = set.getString("quantity");
-				row[5] = set.getString("price");
-				//table.setModel(model);
+				row[2] = set.getString("user_id");
+				row[3] = set.getString("total");
 				model.addRow(row);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -258,6 +231,5 @@ public class Sale_record extends JFrame {
 		table.setRowSorter(rowSorter);
 		
 		rowSorter.setRowFilter(RowFilter.regexFilter(query));
-		
 	}
 }

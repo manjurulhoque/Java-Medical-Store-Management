@@ -44,22 +44,6 @@ public class Insert_company extends JFrame {
 	Connection connection = null;
 
 	/**
-	 * Launch the application.
-	 */
-	// public static void main(String[] args) {
-	// EventQueue.invokeLater(new Runnable() {
-	// public void run() {
-	// try {
-	// Insert_company frame = new Insert_company();
-	// frame.setVisible(true);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// });
-	// }
-
-	/**
 	 * Create the frame.
 	 */
 	public Insert_company() {
